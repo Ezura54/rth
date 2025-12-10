@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临床药师试题生成器 - 项目演进报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@700&display=swap');
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #f8fafc; color: #334155; }
+        .serif { font-family: 'Noto Serif SC', serif; }
+        
+        /* Timeline styling */
+        .timeline-connector {
+            position: absolute;
+            left: 2rem;
+            top: 3rem;
+            bottom: -3rem;
+            width: 2px;
+            background-color: #e2e8f0;
+            z-index: 0;
+        }
+        .last-item .timeline-connector { display: none; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Table styling for the matrix */
+        .matrix-table {
+            width: 100%;
+            font-size: 0.75rem;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .matrix-table th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            text-align: left;
+            padding: 8px;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .matrix-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #64748b;
+        }
+        .matrix-table tr:last-child td { border-bottom: none; }
+        .matrix-row-highlight { background-color: #fffbeb; } /* Light yellow highlight */
+        
+        .min-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-family: monospace;
+        }
+        .bg-cls1 { background-color: #dbeafe; color: #1e40af; } /* Class 1 */
+        .bg-case { background-color: #fce7f3; color: #9d174d; } /* Case */
+        
+        /* Format Example Styling */
+        .format-example {
+            font-family: 'Times New Roman', 'SimSun', serif;
+            background-color: #fff;
+            border: 1px dashed #cbd5e1;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #000;
+            line-height: 1.4;
+        }
+        .tag-highlight {
+            background-color: #fef3c7;
+            border: 1px solid #fcd34d;
+            padding: 0 2px;
+            color: #b45309;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Hero Section -->
+    <header class="bg-slate-900 text-white pt-24 pb-32 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pattern-grid-lg"></div>
+        <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-400/30 rounded-full px-4 py-1 text-indigo-300 text-xs font-bold mb-6">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                临床药师试题生成器项目复盘 2025
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold serif mb-6 leading-tight tracking-tight">
+                从“一张截图”到<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">智能出题系统</span>的进化之路
+            </h1>
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                解析一个被繁琐教务需求倒逼出的技术解决方案：<br>
+                如何用代码结构化地解决复杂的医学考试命题难题。
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 -mt-20 relative z-20 pb-20 space-y-12">
+
+        <!-- Phase 1: The Trigger -->
+        <section class="relative">
+            <div class="timeline-connector"></div>
+            <div class="flex gap-8">
+                <div class="flex-shrink-0 w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-red-500/30 z-10">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div class="flex-grow glass-card rounded-2xl p-8 transform transition hover:-translate-y-1">
+                    <div class="flex justify-between items-start mb-4">
+                        <h2 class="text-2xl font-bold text-slate-800">第一阶段：任务缘起</h2>
+                        <span class="text-xs font-mono text-slate-400">PHASE 01</span>
+                    </div>
+                    <p class="text-slate-600 mb-6">
+                        一切始于工作群里的一张通知截图。这不仅仅是一个简单的任务，更是一个<strong>时间紧、标准高</strong>的突发需求。
+                    </p>
+                    
+                    <!-- 模拟截图 UI -->
+                    <div class="bg-slate-100 rounded-lg p-4 border border-slate-200 max-w-md mx-auto relative group">
+                        <div class="absolute -right-2 -top-2 bg-red-500 text-white text-xs px-2 py-1 rounded shadow">
+                            通知：11月20日Deadline: 11月30日
+                        </div>
+                        <div class="flex items-center gap-3 mb-3 border-b border-slate-200 pb-2">
+                            <div class="w-8 h-8 rounded bg-green-600 flex items-center justify-center text-white"><i class="fa-solid fa-users"></i></div>
+                            <div class="text-xs font-bold text-slate-700">鄂中华培训管理...</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded shadow-sm text-sm text-slate-800 leading-relaxed">
+                                <span class="text-blue-600 font-bold">@所有人</span> ...全国培训部今年额外要求：<br>
+                                1. 每个专业<span class="bg-yellow-200 px-1">新增1套理论试卷（附答案）</span>...<br>
+                                ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 2: Requirements Analysis -->
+        <section class="relative">
+            <div class="timeline-connector"></div>
+            <div class="flex gap-8">
+                <div class="flex-shrink-0 w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-amber-500/30 z-10">
+                    <i class="fa-solid fa-file-contract"></i>
+                </div>
+                <div class="flex-grow glass-card rounded-2xl p-8 transform transition hover:-translate-y-1">
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">第二阶段：三重需求拆解</h2>
+                        <span class="text-xs font-mono text-slate-400">PHASE 02</span>
+                    </div>
+                    
+                    <p class="text-slate-600 mb-6">
+                        为了确保试卷万无一失，我们对三份核心文档进行了像素级的拆解，构成了系统的<strong>“骨架、灵魂与皮囊”</strong>。
+                    </p>
+
+                    <!-- Document A: Hard Metrics (Expanded) -->
+                    <div class="bg-white border-l-4 border-amber-500 p-5 rounded shadow-sm mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <div class="text-xs font-bold text-amber-600 mb-1 uppercase">文档 A：量化硬指标 (骨架)</div>
+                                <h4 class="font-bold text-slate-800 text-lg">《中华医学会出题细则》深度解析</h4>
+                            </div>
+                            <i class="fa-solid fa-scale-balanced text-amber-200 text-3xl"></i>
+                        </div>
+                        
+                        <!-- Layer 1 & 2 -->
+                        <div class="grid md:grid-cols-2 gap-4 text-sm mb-6 border-b border-slate-100 pb-4">
+                            <div class="space-y-2">
+                                <div class="font-bold text-slate-700 mb-2">题型架构 (总分100)</div>
+                                <div class="grid grid-cols-2 gap-2 text-xs text-center">
+                                    <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                                        <span class="block font-bold">A型题 (30分)</span>
+                                        <span class="text-[10px] text-slate-400">5选项 | 单选</span>
+                                    </div>
+                                    <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                                        <span class="block font-bold">B型题 (20分)</span>
+                                        <span class="text-[10px] text-slate-400">5选项 | 配伍</span>
+                                    </div>
+                                    <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                                        <span class="block font-bold">X型题 (20分)</span>
+                                        <span class="text-[10px] text-slate-400">5选项 | 多选</span>
+                                    </div>
+                                    <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                                        <span class="block font-bold">案例题 (30分)</span>
+                                        <span class="text-[10px] text-red-400 font-bold">4选项</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="font-bold text-slate-700 mb-2">内容红线</div>
+                                <ul class="list-disc list-inside text-xs text-amber-900 space-y-1 bg-amber-50 p-3 rounded h-full">
+                                    <li>病例题占比 <span class="font-bold text-red-600">≥ 70%</span> (拒接纯理论)</li>
+                                    <li>复杂病例占比 <span class="font-bold text-red-600">≥ 50%</span> (高龄/肾衰等)</li>
+                                    <li>药事管理 < 5% (如：麻精药品管理条例、处方管理办法)</li>
+                                    <li>医学知识 < 25% (如：解剖、生理、病理)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Layer 3: The Matrix -->
+                        <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-lg relative overflow-hidden">
+                            <div class="absolute right-0 top-0 bg-indigo-500 text-white text-[10px] px-2 py-1 rounded-bl font-bold">V1.0 核心难点</div>
+                            <h5 class="text-sm font-bold text-indigo-900 mb-3"><i class="fa-solid fa-table-list mr-2"></i>表2：考点量化分布矩阵 (12项指标)</h5>
+                            <p class="text-xs text-indigo-700 mb-3">这不仅是分值，是对每一类考点题目数量的死规定：</p>
+                            
+                            <div class="bg-white rounded-lg border border-indigo-100 overflow-hidden">
+                                <table class="matrix-table">
+                                    <thead>
+                                        <tr>
+                                            <th>考点分类 (11-22)</th>
+                                            <th width="35%">第一类题 (A/X/B)</th>
+                                            <th width="30%">案例分析题</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>(11) 医学基础 ~ (13) 临床表现</td>
+                                            <td><span class="min-badge bg-cls1">≥ 4题</span></td>
+                                            <td><span class="min-badge bg-case">≥ 2题</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>(14) 诊断 / (15) 治疗 / (16) 适应症</td>
+                                            <td><span class="min-badge bg-cls1">≥ 5题</span></td>
+                                            <td><span class="min-badge bg-case">≥ 2题</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>(17) 药代、药效</td>
+                                            <td><span class="min-badge bg-cls1">≥ 5题</span></td>
+                                            <td><span class="min-badge bg-case">≥ 2题</span></td>
+                                        </tr>
+                                        <tr class="matrix-row-highlight">
+                                            <td><strong>(18) 个体化给药方案</strong></td>
+                                            <td><span class="min-badge bg-cls1 font-bold">≥ 6题</span></td>
+                                            <td><span class="min-badge bg-case font-bold">≥ 3题</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>(19) 不良反应 / (20) 相互作用</td>
+                                            <td><span class="min-badge bg-cls1">≥ 5题</span></td>
+                                            <td><span class="min-badge bg-case">≥ 2题</span></td>
+                                        </tr>
+                                        <tr class="matrix-row-highlight">
+                                            <td><strong>(21) 药学监护 / (22) 用药教育</strong></td>
+                                            <td><span class="min-badge bg-cls1 font-bold">≥ 6题</span></td>
+                                            <td><span class="min-badge bg-case font-bold">≥ 3题</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document B: Design Philosophy (Expanded) -->
+                    <div class="bg-white border-l-4 border-slate-500 p-5 rounded shadow-sm relative overflow-hidden mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <div class="text-xs font-bold text-slate-500 mb-1 uppercase">文档 B：质化软规范 (灵魂)</div>
+                                <h4 class="font-bold text-slate-800 text-lg">《理论试题的设计及常见问题解析》深度拆解</h4>
+                            </div>
+                            <i class="fa-solid fa-brain text-slate-300 text-3xl"></i>
+                        </div>
+                        
+                        <!-- Philosophy -->
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r mb-6">
+                            <h5 class="font-bold text-blue-900 text-sm mb-2"><i class="fa-solid fa-lightbulb mr-2"></i>核心理念：从“记忆”到“应用”</h5>
+                            <p class="text-xs text-blue-800 mb-2">依据 Bloom 认知目标分类，试题必须完成以下转型：</p>
+                            <div class="grid grid-cols-2 gap-4 text-xs">
+                                <div class="bg-white p-2 rounded text-slate-500 border border-blue-100 opacity-70">
+                                    <span class="line-through text-red-400 mr-2">记忆 (What)</span><br>
+                                    A1型题(单句)应大幅减少。死记硬背不再是考核重点。
+                                </div>
+                                <div class="bg-white p-2 rounded text-blue-700 font-bold border border-blue-200 shadow-sm">
+                                    <i class="fa-solid fa-arrow-up text-blue-500 mr-1"></i> 应用 (How to)<br>
+                                    A2/A3/案例题是核心。考察分析判断与解决问题的能力。
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Specific Specs -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="text-xs text-slate-600 space-y-3">
+                                <div>
+                                    <strong class="text-slate-800 block mb-1">A型题 (最佳选择)：</strong>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li><strong>叙述式病例：</strong>必须含完整要素(性别/年龄/主诉/检查)，拒接“假A2”。</li>
+                                        <li><strong>否定词加粗：</strong>如“不宜”、“不包括”，必须 <span class="bg-yellow-200 px-1 text-black font-bold">加粗</span>。</li>
+                                        <li><span class="text-red-500">避坑：</span>题干冗长无效信息；语义模糊（常见/多见）。</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong class="text-slate-800 block mb-1">B型题 (配伍)：</strong>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li><strong>同质性铁律：</strong>备选答案性质必须一致(如全抗生素)。</li>
+                                        <li><strong>引导句：</strong>必须有引导句说明关系；禁止使用否定引导句。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-600 space-y-3">
+                                <div>
+                                    <strong class="text-slate-800 block mb-1">X型题 (多选)：</strong>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li><strong>难度定位：</strong>正确答案 ≥ 2个。</li>
+                                        <li><strong>绝对性：</strong>正确必须绝对正确，拒绝模棱两可。</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong class="text-slate-800 block mb-1">案例分析题：</strong>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li><strong>选项特殊：</strong>每题 <span class="font-bold text-red-600">4个选项</span>。</li>
+                                        <li><strong>信息控制：</strong>逐步释放信息，防泄题。</li>
+                                        <li><span class="text-red-500">严禁：</span>“以上都是/不是”；选项间存在逻辑包含。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Summary -->
+                        <div class="mt-4 pt-3 border-t border-slate-100 text-center">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-widest">高质量试题“四字诀”</span>
+                            <div class="flex justify-center gap-3 mt-1 text-xs font-bold">
+                                <span class="text-green-600">真 (真实情景)</span>
+                                <span class="text-blue-600">准 (信息完整)</span>
+                                <span class="text-purple-600">同 (选项同质)</span>
+                                <span class="text-red-600">难 (拒绝一眼假)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document C: Formatting Specs -->
+                    <div class="bg-white border-l-4 border-emerald-500 p-5 rounded shadow-sm relative overflow-hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <div class="text-xs font-bold text-emerald-600 mb-1 uppercase">文档 C：排版与格式 (皮囊)</div>
+                                <h4 class="font-bold text-slate-800 text-lg">《20180628出题格式》</h4>
+                            </div>
+                            <i class="fa-solid fa-file-word text-emerald-200 text-3xl"></i>
+                        </div>
+                        
+                        <p class="text-xs text-slate-600 mb-3">
+                            规定了试卷最终呈现的“物理样貌”，如果这一步错了，内容再好也是不合规。
+                        </p>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- Requirement 1: Knowledge Point Tagging -->
+                            <div>
+                                <h5 class="text-xs font-bold text-emerald-800 mb-2"><i class="fa-solid fa-tag mr-1"></i>知识点标注铁律</h5>
+                                <p class="text-[10px] text-slate-500 mb-1">每道题干末尾必须强制添加特定格式的标签：</p>
+                                <div class="format-example">
+                                    29.女性，35岁...应立即给予的治疗措施为（    ）<span class="tag-highlight">【（15）选定五种疾病疾病治疗】</span><br>
+                                    A．联合应用...
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-1 italic">* 必须包含（代码）与标准名称</p>
+                            </div>
+
+                            <!-- Requirement 2: Layout -->
+                            <div>
+                                <h5 class="text-xs font-bold text-emerald-800 mb-2"><i class="fa-solid fa-align-left mr-1"></i>排版布局要求</h5>
+                                <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                                    <li><strong>A/X型题：</strong> 题干在前，5选项在后。</li>
+                                    <li><strong>B型题：</strong> 5选项在前，引导句居中，题干在后。</li>
+                                    <li><strong>答案区：</strong> 必须分离，统一放在文档末尾或大题后。</li>
+                                    <li><strong>案例分析：</strong> 题干段落 -> 问题1 -> 4选项 -> 问题2 -> 4选项。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V1.0/V2.0 核心实现原理深度解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@700&display=swap');
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #0f172a; color: #cbd5e1; }
+        .serif { font-family: 'Noto Serif SC', serif; }
+        
+        .code-window {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+        .code-header {
+            background-color: #0f172a;
+            padding: 8px 16px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #22c55e; }
+        
+        .code-content {
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+        
+        .highlight-keyword { color: #c084fc; font-weight: bold; } /* Purple */
+        .highlight-string { color: #86efac; } /* Green */
+        .highlight-variable { color: #fca5a5; } /* Red/Pink */
+        .highlight-comment { color: #64748b; font-style: italic; } /* Gray */
+        
+        .arrow-down {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            color: #3b82f6;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased py-12 px-4 md:px-8">
+
+    <div class="max-w-5xl mx-auto">
+        
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <div class="inline-block bg-blue-900/30 border border-blue-500/30 text-blue-400 px-3 py-1 rounded-full text-xs font-bold mb-4">TECHNICAL DEEP DIVE</div>
+            <h1 class="text-3xl md:text-5xl font-bold text-white mb-6 serif">V1.0/V2.0 破局思路：<br>规则映射与 Prompt 编程</h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+                V1.0 的核心不是算法，而是<strong>“翻译”</strong>。它通过一段精心构造的 System Prompt，将人类的行政文档（细则、设计、格式）直接“编译”为 AI 可执行的指令。
+            </p>
+        </div>
+
+        <!-- Logic Flow -->
+        <div class="grid md:grid-cols-3 gap-8 mb-12">
+            <!-- Step 1 -->
+            <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 relative overflow-hidden group hover:border-blue-500 transition duration-300">
+                <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-bl font-bold">Input</div>
+                <div class="text-4xl text-blue-500 mb-4"><i class="fa-solid fa-file-pdf"></i></div>
+                <h3 class="text-xl font-bold text-white mb-2">1. 知识库摄入</h3>
+                <p class="text-sm text-slate-400">
+                    使用 <code>pdf.js</code> 前端解析 PDF。
+                    <br><span class="text-xs bg-slate-700 px-1 rounded">关键点</span> 不做切片，全量提取文本作为 Context。
+                </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 relative overflow-hidden group hover:border-purple-500 transition duration-300">
+                <div class="absolute top-0 right-0 bg-purple-600 text-white text-xs px-2 py-1 rounded-bl font-bold">Core Logic</div>
+                <div class="text-4xl text-purple-500 mb-4"><i class="fa-solid fa-code"></i></div>
+                <h3 class="text-xl font-bold text-white mb-2">2. 规则硬编码</h3>
+                <p class="text-sm text-slate-400">
+                    将文档 A/B/C 的要求转化为 <strong>System Prompt</strong>。
+                    <br><span class="text-xs bg-slate-700 px-1 rounded">关键点</span> 强制结构、强制格式、强制溯源。
+                </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 relative overflow-hidden group hover:border-emerald-500 transition duration-300">
+                <div class="absolute top-0 right-0 bg-emerald-600 text-white text-xs px-2 py-1 rounded-bl font-bold">Output</div>
+                <div class="text-4xl text-emerald-500 mb-4"><i class="fa-solid fa-file-code"></i></div>
+                <h3 class="text-xl font-bold text-white mb-2">3. 结构化生成</h3>
+                <p class="text-sm text-slate-400">
+                    LLM 输出 Markdown，前端渲染 HTML。
+                    <br><span class="text-xs bg-slate-700 px-1 rounded">关键点</span> 答案分离，排版即打印。
+                </p>
+            </div>
+        </div>
+
+        <!-- The Code Analysis Section -->
+        <div class="space-y-12">
+            
+            <!-- Analysis 1: Structure Mapping -->
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/3">
+                    <h3 class="text-xl font-bold text-white mb-3 border-l-4 border-blue-500 pl-3">破局点 1：文档 A (骨架) 的代码化</h3>
+                    <p class="text-sm text-slate-400 mb-4">
+                        如何保证生成的试卷符合《出题细则》的题型和分值要求？
+                        <br><strong>思路：</strong> 将用户在 UI 输入的数字 (`config`) 动态注入到 Prompt 中，锁定输出结构。
+                    </p>
+                    <div class="bg-blue-900/20 p-3 rounded border border-blue-800 text-xs text-blue-200">
+                        <i class="fa-solid fa-check mr-2"></i> 解决了“题型配比”问题
+                    </div>
+                </div>
+                <div class="md:w-2/3">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div>
+                            <span class="text-xs text-slate-500 ml-2">generateExam.js (V1.0 Snippet)</span>
+                        </div>
+                        <div class="code-content">
+                            <span class="highlight-keyword">const</span> config = {<br>
+                            &nbsp;&nbsp;A: document.getElementById(<span class="highlight-string">'countA'</span>).value, <span class="highlight-comment">// e.g., 5</span><br>
+                            &nbsp;&nbsp;B: document.getElementById(<span class="highlight-string">'countB'</span>).value, <span class="highlight-comment">// e.g., 1 group</span><br>
+                            &nbsp;&nbsp;...<br>
+                            };<br><br>
+                            <span class="highlight-keyword">const</span> systemPrompt = `<br>
+                            ...<br>
+                            1. **试卷结构** (Strictly follow):<br>
+                            - ## 一、A型题（共 <span class="highlight-variable">${config.A}</span> 题，每题1分）<br>
+                            - ## 二、B型题（共 <span class="highlight-variable">${config.B}</span> 组，每组5题）<br>
+                            ...<br>
+                            **Output Quantity:** A=<span class="highlight-variable">${config.A}</span>, B=<span class="highlight-variable">${config.B}</span>...<br>
+                            `;
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><i class="fa-solid fa-arrow-down"></i></div>
+
+            <!-- Analysis 2: Quality Control -->
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/3">
+                    <h3 class="text-xl font-bold text-white mb-3 border-l-4 border-purple-500 pl-3">破局点 2：文档 B (灵魂) 的指令化</h3>
+                    <p class="text-sm text-slate-400 mb-4">
+                        如何避免“假A2题”和“死记硬背题”？如何落实《设计解析》中的避坑指南？
+                        <br><strong>思路：</strong> 使用自然语言的“强指令 (Strong Instructions)” 约束 AI 的生成风格。
+                    </p>
+                    <div class="bg-purple-900/20 p-3 rounded border border-purple-800 text-xs text-purple-200">
+                        <i class="fa-solid fa-check mr-2"></i> 解决了“题干质量”问题
+                    </div>
+                </div>
+                <div class="md:w-2/3">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div>
+                            <span class="text-xs text-slate-500 ml-2">System Prompt Snippet</span>
+                        </div>
+                        <div class="code-content">
+                            **【内容来源铁律】**：<br>
+                            1. <span class="highlight-keyword">Strict Source:</span> All cases MUST come from the uploaded PDF.<br>
+                            2. <span class="highlight-keyword">No Simple QA:</span> Question stems MUST be **"Narrative Clinical Case Summaries"** (Patient Info + History + Symptoms).<br><br>
+                            **【否定词处理】**：<br>
+                            If the question asks "NOT" or "EXCEPT" (e.g., 不包括, 不宜), you <span class="highlight-keyword">MUST</span> format the negative word as **bold** (e.g., **不**).<br>
+                            <span class="highlight-comment">// Direct mapping from Document B's requirement</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down"><i class="fa-solid fa-arrow-down"></i></div>
+
+            <!-- Analysis 3: Format Enforcement -->
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/3">
+                    <h3 class="text-xl font-bold text-white mb-3 border-l-4 border-emerald-500 pl-3">破局点 3：文档 C (皮囊) 的模板化</h3>
+                    <p class="text-sm text-slate-400 mb-4">
+                        如何确保每道题后面都有规范的【知识点】标注？
+                        <br><strong>思路：</strong> V1.0 采用了最简单粗暴但有效的方法——**硬编码列表**。
+                    </p>
+                    <div class="bg-emerald-900/20 p-3 rounded border border-emerald-800 text-xs text-emerald-200">
+                        <i class="fa-solid fa-check mr-2"></i> 解决了“合规格式”问题
+                    </div>
+                </div>
+                <div class="md:w-2/3">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div>
+                            <span class="text-xs text-slate-500 ml-2">System Prompt Snippet</span>
+                        </div>
+                        <div class="code-content">
+                            **【知识点标注规范】**：<br>
+                            Every question MUST end with a tag. Choose ONE from this exact list:<br>
+                            <span class="highlight-string">
+                            （11）选定五种疾病相关医学基础<br>
+                            （...）...<br>
+                            （18）个体化给药方案的制定<br>
+                            （21）个体化药学监护计划的制定<br>
+                            </span><br>
+                            <span class="highlight-keyword">Format Example:</span><br>
+                            ...treatment is ( ) *【（15）选定五种疾病疾病治疗】*
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Summary -->
+        <div class="mt-16 border-t border-slate-700 pt-8">
+            <h3 class="text-2xl font-bold text-white mb-4">总结：V1.0 的本质</h3>
+            <p class="text-slate-400 mb-6">
+                V1.0 实际上是一个<strong>“基于规则的文本生成器”</strong>。它没有真正的“理解”出题细则的全部复杂性（如表2的量化矩阵），而是通过将细则“翻译”成 Prompt，利用大模型的通用能力来“模拟”一个命题专家。
+            </p>
+            <div class="flex gap-4">
+                <div class="bg-slate-800 px-4 py-2 rounded text-sm text-slate-300 border border-slate-700">
+                    <strong class="text-white">输入：</strong> PDF教材 + 题量配置
+                </div>
+                <div class="text-slate-500 self-center"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="bg-blue-900/40 px-4 py-2 rounded text-sm text-blue-300 border border-blue-800">
+                    <strong class="text-white">核心：</strong> 超级 System Prompt (包含 A/B/C 文档规则)
+                </div>
+                <div class="text-slate-500 self-center"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="bg-slate-800 px-4 py-2 rounded text-sm text-slate-300 border border-slate-700">
+                    <strong class="text-white">输出：</strong> 符合格式的 Markdown 试卷
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V3.0 版本改进深度解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@700&display=swap');
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #0f172a; color: #cbd5e1; }
+        .serif { font-family: 'Noto Serif SC', serif; }
+        
+        .diff-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .code-box {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .header-old { background-color: #334155; color: #94a3b8; }
+        .header-new { background-color: #4f46e5; color: #fff; }
+        
+        .code-content {
+            padding: 1rem;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        
+        .highlight-add { background-color: rgba(34, 197, 94, 0.2); color: #86efac; display: block; margin: 0 -1rem; padding: 0 1rem; }
+        .highlight-del { background-color: rgba(239, 68, 68, 0.2); color: #fca5a5; display: block; margin: 0 -1rem; padding: 0 1rem; opacity: 0.7; text-decoration: line-through; }
+        .comment { color: #64748b; font-style: italic; }
+        
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .badge-ui { background-color: #3b82f6; color: white; }
+        .badge-logic { background-color: #a855f7; color: white; }
+        .badge-prompt { background-color: #f59e0b; color: white; }
+    </style>
+</head>
+<body class="py-12 px-4 md:px-8 max-w-6xl mx-auto">
+
+    <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 serif">V3.0 核心改进深度解析</h1>
+        <p class="text-slate-400">从“随机盲盒”到“精准控制”的技术实现路径</p>
+    </div>
+
+    <!-- Feature 1: UI Upgrade -->
+    <div class="mb-16">
+        <span class="feature-badge badge-ui"><i class="fa-solid fa-layer-group mr-2"></i> 1. UI 交互层：考点可视化</span>
+        <p class="text-sm text-slate-300 mb-4">
+            V3.0 在前端界面增加了一个关键的<strong>“考点选择器”</strong>，让用户能直观看到所有 12 个考点，并进行勾选。这是实现“白盒控制”的入口。
+        </p>
+        
+        <div class="diff-container">
+            <!-- V1.0 -->
+            <div class="code-box">
+                <div class="code-header header-old">V1.0 HTML Structure</div>
+                <div class="code-content text-slate-400">
+                    &lt;!-- Step 2: Exam Config --&gt;<br>
+                    &lt;div&gt;...&lt;/div&gt;<br>
+                    <br>
+                    <span class="highlight-del">&lt;!-- No KP Selection --&gt;</span><br>
+                    <br>
+                    &lt;button id="generateBtn"&gt;生成&lt;/button&gt;
+                </div>
+            </div>
+            
+            <!-- V3.0 -->
+            <div class="code-box">
+                <div class="code-header header-new">V3.0 HTML Structure (Added)</div>
+                <div class="code-content text-slate-300">
+                    &lt;!-- Step 3: Knowledge Points (New) --&gt;<br>
+                    &lt;div&gt;<br>
+                    <span class="highlight-add">  &lt;h2&gt;3. 考点覆盖配置&lt;/h2&gt;</span><br>
+                    <span class="highlight-add">  &lt;button onclick="toggleAllKP()"&gt;全选/反选&lt;/button&gt;</span><br>
+                    <span class="highlight-add">  &lt;div id="kpContainer"&gt;</span><br>
+                    <span class="highlight-add">    &lt;!-- JS Injected Checkboxes --&gt;</span><br>
+                    <span class="highlight-add">  &lt;/div&gt;</span><br>
+                    &lt;/div&gt;
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature 2: Logic Upgrade -->
+    <div class="mb-16">
+        <span class="feature-badge badge-logic"><i class="fa-solid fa-code mr-2"></i> 2. 业务逻辑层：状态管理与注入</span>
+        <p class="text-sm text-slate-300 mb-4">
+            V3.0 在 JS 中增加了获取用户勾选状态的逻辑，并将其转化为一个数组。如果用户未勾选任何考点，系统会拦截请求，防止生成无效试卷。
+        </p>
+        
+        <div class="diff-container">
+            <!-- V1.0 -->
+            <div class="code-box">
+                <div class="code-header header-old">V1.0 JS Logic</div>
+                <div class="code-content text-slate-400">
+                    <span class="comment">// 仅获取数量配置</span><br>
+                    const config = {<br>
+                        A: document.getElementById('countA').value,<br>
+                        ...<br>
+                    };<br>
+                    <br>
+                    <span class="highlight-del">// 无考点数据处理逻辑</span>
+                </div>
+            </div>
+            
+            <!-- V3.0 -->
+            <div class="code-box">
+                <div class="code-header header-new">V3.0 JS Logic (Enhanced)</div>
+                <div class="code-content text-slate-300">
+                    <span class="comment">// 1. 获取选中的复选框</span><br>
+                    <span class="highlight-add">const selectedKPs = Array.from(</span><br>
+                    <span class="highlight-add">    document.querySelectorAll('.kp-checkbox:checked')</span><br>
+                    <span class="highlight-add">).map(cb => cb.value);</span><br>
+                    <br>
+                    <span class="comment">// 2. 防呆校验</span><br>
+                    <span class="highlight-add">if (selectedKPs.length === 0) {</span><br>
+                    <span class="highlight-add">    alert("请至少选择一个考点"); return;</span><br>
+                    <span class="highlight-add">}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature 3: Prompt Upgrade -->
+    <div class="mb-16">
+        <span class="feature-badge badge-prompt"><i class="fa-solid fa-terminal mr-2"></i> 3. 提示词工程：动态约束注入</span>
+        <p class="text-sm text-slate-300 mb-4">
+            这是 V3.0 最核心的改动。V1.0 将所有考点写死在 Prompt 中让 AI 选；V3.0 则利用 JS 模板字符串，将用户选中的考点动态插入 Prompt，并加上了<strong>“仅从...”</strong>的强约束指令。
+        </p>
+        
+        <div class="diff-container">
+            <!-- V1.0 -->
+            <div class="code-box">
+                <div class="code-header header-old">V1.0 System Prompt (Hardcoded)</div>
+                <div class="code-content text-slate-400">
+                    const systemPrompt = `<br>
+                    ...<br>
+                    请根据题目内容，从以下列表中<span class="highlight-del">选择最贴切的一个</span>：<br>
+                    <span class="highlight-del">（11）选定五种疾病相关医学基础...</span><br>
+                    <span class="highlight-del">（...）... (所有12个考点)</span><br>
+                    <span class="highlight-del">（22）个体化用药教育方案的设计</span><br>
+                    ...<br>
+                    `;
+                </div>
+            </div>
+            
+            <!-- V3.0 -->
+            <div class="code-box">
+                <div class="code-header header-new">V3.0 System Prompt (Dynamic)</div>
+                <div class="code-content text-slate-300">
+                    const systemPrompt = `<br>
+                    ...<br>
+                    **【本次考试指定考点范围】**：<br>
+                    请<span class="highlight-add">**仅从**</span>以下用户勾选的知识点范围内进行出题：<br>
+                    <span class="highlight-add">${selectedKPs.join('\n')}</span><br>
+                    <br>
+                    <span class="comment">// 变量注入实现了“指哪打哪”</span><br>
+                    ...<br>
+                    `;
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="border-t border-slate-700 pt-8 mt-8">
+        <h3 class="text-xl font-bold text-white mb-4">改进总结</h3>
+        <ul class="space-y-3 text-slate-400 text-sm">
+            <li class="flex items-start">
+                <i class="fa-solid fa-arrow-right text-blue-500 mt-1 mr-2"></i>
+                <span><strong>可控性提升：</strong> 用户从被动的“接受者”变成了主动的“设计者”。</span>
+            </li>
+            <li class="flex items-start">
+                <i class="fa-solid fa-arrow-right text-blue-500 mt-1 mr-2"></i>
+                <span><strong>场景拓展：</strong> V1.0 只能做模拟考；V3.0 可以做“专项弱项训练”或“特定章节测试”。</span>
+            </li>
+            <li class="flex items-start">
+                <i class="fa-solid fa-arrow-right text-blue-500 mt-1 mr-2"></i>
+                <span><strong>Token 效率：</strong> 通过减少 Prompt 中的无关考点干扰，让 AI 的注意力更集中在用户关注的内容上。</span>
+            </li>
+        </ul>
+    </div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临床药师出题器 V3.0 程序设计架构分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Mermaid for Diagrams -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&family=Noto+Serif+SC:wght@700&display=swap');
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #0f172a; color: #cbd5e1; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .serif { font-family: 'Noto Serif SC', serif; }
+        
+        .arch-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tech-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .badge-js { background-color: #f7df1e; color: #000; }
+        .badge-rag { background-color: #3b82f6; color: #fff; }
+        .badge-llm { background-color: #a855f7; color: #fff; }
+        
+        .code-snippet {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+        
+        .diagram-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="py-12 px-4 md:px-8 max-w-6xl mx-auto">
+
+    <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-400/30 rounded-full px-4 py-1 text-indigo-300 text-xs font-bold mb-6">
+            SYSTEM ARCHITECTURE REVIEW
+        </div>
+        <h1 class="text-3xl md:text-5xl font-bold text-white mb-6 serif">V3.0 程序设计架构深度解析</h1>
+        <p class="text-slate-400 max-w-3xl mx-auto text-lg">
+            从“黑盒脚本”进化为“交互式 RAG 系统”。<br>
+            本文将从数据流、API 策略、非结构化数据处理及 Prompt 架构四个维度，剖析 V3.0 的工程实现。
+        </p>
+    </div>
+
+    <!-- 1. Overall Architecture -->
+    <div class="arch-card border-l-4 border-blue-500">
+        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+            <i class="fa-solid fa-sitemap mr-3 text-blue-500"></i> 1. 整体架构：Client-Side RAG
+        </h2>
+        <p class="text-slate-400 mb-6">
+            V3.0 采用的是一种极简的 <strong>Serverless / Client-Side Architecture</strong>。它没有后端数据库，所有的数据处理（ETL）、逻辑控制（Logic）和渲染（View）都在浏览器端完成。
+        </p>
+        
+        <div class="diagram-container">
+            <div class="mermaid">
+            graph LR
+                subgraph Browser_Client [浏览器客户端]
+                    UI[UI 配置层<br/>(考点/题量)] --> Logic[业务逻辑层<br/>(状态管理)]
+                    PDF[PDF 文件] --> Parser[PDF.js 解析器<br/>(ETL)]
+                    Parser --> Context[全量文本上下文]
+                    Logic --> Prompt[Prompt 组装工厂]
+                    Context --> Prompt
+                end
+                
+                subgraph LLM_Service [模型服务层]
+                    Prompt --> API_Call{API 网关<br/>(Gemini 2.5/OpenAI)}
+                    API_Call --> Model[大语言模型]
+                    Model --> Result[Markdown 响应]
+                end
+                
+                Result --> Renderer[Marked.js 渲染器] --> DOM[DOM 试卷]
+            </div>
+        </div>
+        
+        <ul class="list-disc list-inside text-slate-400 text-sm space-y-2 mt-4">
+            <li><strong>优势：</strong> 零部署成本，数据隐私性高（PDF 不上传服务器，直接在本地内存处理），响应速度仅受限于 LLM API。</li>
+            <li><strong>设计模式：</strong> 典型的 <strong>MVC (Model-View-Controller)</strong> 变体。State (SelectedKPs) 作为 Model，Prompt Injection 作为 Controller，HTML 作为 View。</li>
+        </ul>
+    </div>
+
+    <!-- 2. Logic & Control Flow -->
+    <div class="arch-card border-l-4 border-purple-500">
+        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+            <i class="fa-solid fa-sliders mr-3 text-purple-500"></i> 2. 核心逻辑：动态注入与控制反转
+        </h2>
+        <p class="text-slate-400 mb-4">
+            V3.0 与 V1.0 最大的区别在于<strong>控制权的转移</strong>。V1.0 是硬编码（Hardcoding），V3.0 实现了<strong>动态注入（Dynamic Injection）</strong>。
+        </p>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-lg font-bold text-purple-300 mb-2">状态管理 (State Management)</h3>
+                <p class="text-xs text-slate-400 mb-2">
+                    程序引入了 `selectedKPs` 数组来维护用户的意图。这是整个系统的“状态源”。
+                </p>
+                <div class="code-snippet">
+// 获取 UI 状态
+const selectedKPs = Array.from(
+  document.querySelectorAll('.kp-checkbox:checked')
+).map(cb => cb.value);
+
+// 状态守卫 (Guard Clause)
+if (selectedKPs.length === 0) { 
+    alert("请至少选择一个考点"); 
+    return; 
+}
+                </div>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-purple-300 mb-2">提示词工厂 (Prompt Factory)</h3>
+                <p class="text-xs text-slate-400 mb-2">
+                    System Prompt 不再是静态字符串，而是根据状态动态构建的模板。
+                </p>
+                <div class="code-snippet">
+const systemPrompt = `
+...
+**【本次考试指定考点范围】**：
+请**仅从**以下用户勾选的知识点范围内进行出题：
+${selectedKPs.join('\n')} 
+// ^^^ 动态注入点 (Injection Point)
+...
+`;
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. API Integration -->
+    <div class="arch-card border-l-4 border-indigo-500">
+        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+            <i class="fa-solid fa-network-wired mr-3 text-indigo-500"></i> 3. API 引用策略：适配器模式
+        </h2>
+        <p class="text-slate-400 mb-4">
+            为了兼容 Gemini 和 OpenAI/DeepSeek，V3.0 实现了一个简单的<strong>适配器模式 (Adapter Pattern)</strong>。代码默认指向了最新的 <strong>Gemini 2.5 Flash</strong> 模型。
+        </p>
+        
+        <div class="code-snippet">
+// 默认模型配置 (V3.0 Code Line 120+)
+&lt;option value="gemini-2.5-flash-preview-09-2025"&gt;gemini-2.5-flash (最新)&lt;/option&gt;
+
+// 策略分发 (Strategy Pattern)
+if (provider === 'gemini') {
+    // 调用 Gemini API (v1beta)
+    result = await callGemini(apiKey, model, system, user);
+} else {
+    // 兼容所有 OpenAI 格式接口
+    result = await callOpenAI(apiKey, baseUrl, model, system, user);
+}
+        </div>
+        <p class="text-xs text-slate-400 mt-2">
+            <strong>Context Window 处理：</strong> 由于 V3.0 采用全文投喂，API 调用时直接截取了前 70,000 字符。这是基于 <strong>Gemini 2.5 Flash (Preview)</strong> 及其前代 1.5 Pro 拥有百万级 Token 上下文窗口的特性设计的，避免了复杂的 RAG 切片，极大简化了系统。
+        </p>
+    </div>
+
+    <!-- 4. PDF Processing -->
+    <div class="arch-card border-l-4 border-red-500">
+        <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+            <i class="fa-solid fa-file-pdf mr-3 text-red-500"></i> 4. PDF 解读：非结构化数据 ETL
+        </h2>
+        <p class="text-slate-400 mb-4">
+            系统如何理解 PDF？这里使用了一个<strong>“暴力提取” (Brute-force Extraction)</strong> 的策略。
+        </p>
+        
+        <div class="flex items-start gap-4">
+            <div class="bg-slate-800 p-4 rounded text-sm text-slate-300 w-full">
+                <h4 class="font-bold text-red-400 mb-2">处理流程：</h4>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>Stream Reading:</strong> 使用 `file.arrayBuffer()` 读取二进制流。</li>
+                    <li><strong>Parsing:</strong> 调用 `pdfjsLib.getDocument()`。</li>
+                    <li><strong>Iteration:</strong> 遍历每一页 (`pdf.numPages`)。</li>
+                    <li><strong>Text Mining:</strong> 调用 `page.getTextContent()` 获取文本图元。</li>
+                    <li><strong>Aggregation:</strong> 将所有文本拼接成一个巨大的字符串 `fullText`。</li>
+                </ol>
+            </div>
+            <div class="bg-slate-800 p-4 rounded text-sm text-slate-300 w-full">
+                <h4 class="font-bold text-yellow-400 mb-2">设计考量：</h4>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>为什么不保留格式？</strong> LLM 对纯文本的理解能力极强，保留复杂的 PDF 布局（表格、分栏）反而会增加 Token 消耗且容易引入噪点。</li>
+                    <li><strong>局限性：</strong> 图片和扫描件无法识别（因为没有集成 OCR），仅支持文本型 PDF。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="border-t border-slate-700 pt-8 mt-8 text-center">
+        <h3 class="text-xl font-bold text-white mb-4">总结：V3.0 的工程化思维</h3>
+        <p class="text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            V3.0 不是简单的功能堆砌，而是体现了<strong>“以人为本”</strong>的工程设计。
+            它通过<strong>前端交互设计</strong>解决了 AI 输出不可控的问题，
+            通过<strong>升级到 Gemini 2.5</strong> 利用了更强的推理能力和上下文窗口，
+            是一个典型的<strong>“模型能力驱动应用架构简化”</strong>的案例。
+        </p>
+    </div>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V3.0 设计评审：毒舌吐槽大会</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&family=Zcool+KuaiLe&display=swap');
+        
+        body { background-color: #111827; color: #e5e7eb; font-family: 'Noto Sans SC', sans-serif; }
+        
+        /* Chat Bubble Animations */
+        .bubble {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        @keyframes popIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Staggered Animation Delays */
+        .bubble:nth-child(1) { animation-delay: 0.1s; }
+        .bubble:nth-child(2) { animation-delay: 0.3s; }
+        .bubble:nth-child(3) { animation-delay: 0.5s; }
+        .bubble:nth-child(4) { animation-delay: 0.7s; }
+        
+        .role-avatar {
+            width: 60px; height: 60px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+        }
+        
+        .toxic-score {
+            font-family: 'Zcool KuaiLe', cursive;
+            transform: rotate(-5deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-purple-900 to-indigo-900 py-10 shadow-2xl relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==')] opacity-20"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <span class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-widest animate-pulse">Code Review From Hell</span>
+            <h1 class="text-4xl md:text-6xl font-black text-white mt-4 mb-2 tracking-tight">
+                V3.0 设计方案<span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500">毒舌评审</span>
+            </h1>
+            <p class="text-indigo-200 text-lg">四位评审，零个情面。直击架构灵魂的拷问。</p>
+        </div>
+    </header>
+
+    <!-- The Panel -->
+    <div class="container mx-auto px-4 mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Architect -->
+        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-amber-500 hover:bg-slate-750 transition">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="role-avatar bg-amber-600 text-white"><i class="fa-solid fa-server"></i></div>
+                <div>
+                    <h3 class="font-bold text-white">老张</h3>
+                    <p class="text-xs text-amber-400">资深后端架构师</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400">口头禅：“这也叫架构？数据库呢？高可用呢？”</p>
+        </div>
+        
+        <!-- AI Model -->
+        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-purple-500 hover:bg-slate-750 transition">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="role-avatar bg-purple-600 text-white"><i class="fa-solid fa-robot"></i></div>
+                <div>
+                    <h3 class="font-bold text-white">赛博格</h3>
+                    <p class="text-xs text-purple-400">Gemini 2.5 本模</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400">口头禅：“别再给我塞垃圾文本了，我快吐了。”</p>
+        </div>
+
+        <!-- Pharmacist -->
+        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-blue-500 hover:bg-slate-750 transition">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="role-avatar bg-blue-600 text-white"><i class="fa-solid fa-user-doctor"></i></div>
+                <div>
+                    <h3 class="font-bold text-white">王药师</h3>
+                    <p class="text-xs text-blue-400">一线用户</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400">口头禅：“我不懂代码，我就问这玩意儿能不能让我下班？”</p>
+        </div>
+
+        <!-- Intern -->
+        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-emerald-500 hover:bg-slate-750 transition">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="role-avatar bg-emerald-600 text-white"><i class="fa-brands fa-react"></i></div>
+                <div>
+                    <h3 class="font-bold text-white">Kevin</h3>
+                    <p class="text-xs text-emerald-400">00后前端实习生</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400">口头禅：“这代码一股 jQuery 味儿... Typescript 呢？”</p>
+        </div>
+    </div>
+
+    <!-- Roast Session 1: Architecture -->
+    <div class="container mx-auto px-4 mt-12 max-w-4xl">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="h-px bg-slate-700 flex-1"></div>
+            <h2 class="text-2xl font-bold text-slate-200"><i class="fa-solid fa-skull text-slate-500 mr-2"></i>第一回合：所谓的“无后端架构”</h2>
+            <div class="h-px bg-slate-700 flex-1"></div>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Architect Roast -->
+            <div class="flex gap-4 bubble">
+                <div class="role-avatar bg-amber-600 text-white"><i class="fa-solid fa-server"></i></div>
+                <div class="bg-slate-800 p-4 rounded-r-xl rounded-bl-xl border border-slate-700 flex-1">
+                    <p class="text-sm text-amber-200 font-bold mb-1">老张 (架构师)</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        你们管这叫架构？这不就是个<strong>裸奔的 HTML 文件</strong>吗？<br>
+                        PDF 解析在前端做，几百页的书直接塞进浏览器内存，你是想把用户的 Chrome 炸了吗？<br>
+                        所谓的 Client-Side RAG，说白了就是“我懒得写后端接口”的借口。没有数据库持久化，用户刷新一下页面，刚刚勾选的配置全没了。这种**“阅后即焚”**的用户体验，也就你们想得出来。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Intern Roast -->
+            <div class="flex gap-4 flex-row-reverse bubble">
+                <div class="role-avatar bg-emerald-600 text-white"><i class="fa-brands fa-react"></i></div>
+                <div class="bg-slate-800 p-4 rounded-l-xl rounded-br-xl border border-slate-700 flex-1 text-right">
+                    <p class="text-sm text-emerald-200 font-bold mb-1">Kevin (前端)</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        虽然老张很啰嗦，但这单文件结构确实太 Web 1.0 了。<br>
+                        都 2025 年了，还在用 `document.getElementById`？状态管理全靠全局变量 `extractedText`？<br>
+                        这要是让我重构，高低得整一个 Next.js + Zustand。不过...这种**“开局一个 HTML，功能全靠复制粘贴”**的发布方式，确实...挺极客的（如果你忽略那坨 `onclick` 的话）。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roast Session 2: The Logic & PDF -->
+    <div class="container mx-auto px-4 mt-12 max-w-4xl">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="h-px bg-slate-700 flex-1"></div>
+            <h2 class="text-2xl font-bold text-slate-200"><i class="fa-solid fa-brain text-slate-500 mr-2"></i>第二回合：简单粗暴的 RAG</h2>
+            <div class="h-px bg-slate-700 flex-1"></div>
+        </div>
+
+        <div class="space-y-6">
+            <!-- AI Roast -->
+            <div class="flex gap-4 bubble">
+                <div class="role-avatar bg-purple-600 text-white"><i class="fa-solid fa-robot"></i></div>
+                <div class="bg-slate-800 p-4 rounded-r-xl rounded-bl-xl border border-slate-700 flex-1">
+                    <p class="text-sm text-purple-200 font-bold mb-1">赛博格 (AI 本模)</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        我得感谢 V3.0 终于加了 `selectedKPs` 过滤，V1.0 那会儿我简直是在乱猜。<br>
+                        <strong>但是！</strong> 你们处理 PDF 的方式太野蛮了！<br>
+                        `substring(0, 70000)`？直接截断前 7 万个字符？如果重点内容在第 70001 个字符怎么办？<br>
+                        你们把我当成垃圾桶了吗？也不做个分块（Chunking），也不做个关键词检索，就把一坨乱七八糟的 PDF 文本扔给我，然后期待我吐出完美的试卷？**我是大模型，不是大魔术师！**
+                    </p>
+                </div>
+            </div>
+
+            <!-- Pharmacist Reply -->
+            <div class="flex gap-4 flex-row-reverse bubble">
+                <div class="role-avatar bg-blue-600 text-white"><i class="fa-solid fa-user-doctor"></i></div>
+                <div class="bg-slate-800 p-4 rounded-l-xl rounded-br-xl border border-slate-700 flex-1 text-right">
+                    <p class="text-sm text-blue-200 font-bold mb-1">王药师 (用户)</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        虽然听不懂你们在吵什么 Token，但 V3.0 这个<strong>“考点勾选”</strong>我是真喜欢。<br>
+                        之前 V1.0 生成出来的题全是“药代动力学”，我看着都头大。现在我想练“相互作用”就勾“相互作用”，终于不用像抽盲盒一样刷题了。<br>
+                        至于你们说的什么截断... 只要不截断我的工资，我无所谓。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Verdict Card -->
+    <div class="container mx-auto px-4 mt-16 mb-16 max-w-4xl">
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl relative">
+            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-slate-900 px-6 py-2 rounded-full font-bold shadow-lg">
+                最终判决书
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mt-4">
+                <div>
+                    <h3 class="text-red-400 font-bold mb-4 text-lg border-b border-red-900/30 pb-2">❌ 致命槽点 (The Bad)</h3>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-start"><span class="text-red-500 mr-2">●</span> <strong>暴力截断：</strong> 70k 字符限制是把双刃剑，大文件必丢数据。</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">●</span> <strong>状态失忆：</strong> 刷新即重置，没有 LocalStorage 缓存配置。</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">●</span> <strong>主线程阻塞：</strong> 解析大 PDF 时，UI 会卡死（Kevin: "Web Worker 了解一下？"）。</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">●</span> <strong>安全裸奔：</strong> API Key 直接填在前端，虽说是本地运行，但如果不小心点了“保存网页”发给别人...</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-green-400 font-bold mb-4 text-lg border-b border-green-900/30 pb-2">✅ 意外之喜 (The Good)</h3>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-start"><span class="text-green-500 mr-2">●</span> <strong>极致部署：</strong> 一个 HTML 文件发给谁都能用，这是对“微服务教条”的降维打击。</li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">●</span> <strong>交互闭环：</strong> V3.0 的 `Checkbox -> JS -> Prompt` 链路，完美解决了“AI 不可控”的痛点。</li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">●</span> <strong>成本优势：</strong> 利用 Client-Side 算力解析 PDF，帮老板省了服务器钱（老张：...行吧）。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-slate-700 text-center">
+                <p class="text-slate-300 italic mb-2">一句话总结</p>
+                <p class="text-xl md:text-2xl font-bold text-white">
+                    "它就像一辆燃烧着冲向悬崖的法拉利——壮观，快速，且不可挽回。<br>
+                    它是架构师的噩梦，却是用户的神器。"
+                </p>
+                <div class="mt-4 flex justify-center gap-2">
+                    <span class="px-2 py-1 bg-slate-700 rounded text-xs text-slate-400">工程评分: 3/10</span>
+                    <span class="px-2 py-1 bg-slate-700 rounded text-xs text-slate-400">产品评分: 9/10</span>
+                    <span class="px-2 py-1 bg-slate-700 rounded text-xs text-slate-400">毒舌指数: MAX</span>
+                </div>
+            </div>
+        </div>
+    </div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages 部署指南 (深蓝科技版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;700&family=Orbitron:wght@500;700&display=swap');
+
+        /* --- 核心背景设置：深蓝渐变 + 科技网格 --- */
+        body {
+            font-family: 'Exo 2', sans-serif;
+            color: #e0f2fe; /* 极浅的蓝白文字 */
+            background-color: #0f172a; /* 兜底深蓝 */
+            /* 背景：深靛蓝到深紫的渐变，完全不使用纯黑 */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                linear-gradient(to bottom right, #0f172a 0%, #1e1b4b 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 绘制全屏科技网格 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px; /* 网格尺寸 */
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* --- 玻璃拟态卡片 (Glassmorphism) --- */
+        .tech-card {
+            background: rgba(30, 41, 59, 0.6); /* 半透明深蓝板 */
+            backdrop-filter: blur(12px); /* 磨砂效果 */
+            border: 1px solid rgba(56, 189, 248, 0.3); /* 青色微光边框 */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); /* 柔和阴影 */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            border-color: rgba(56, 189, 248, 0.8); /* 悬停边框变亮 */
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); /* 悬停外发光 */
+        }
+
+        /* --- 字体与发光特效 --- */
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif; /* 标题用科幻字体 */
+            letter-spacing: 1px;
+        }
+        
+        .glow-text-cyan {
+            color: #22d3ee; /* 青色 */
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+        }
+        
+        .glow-text-purple {
+            color: #e879f9; /* 紫色 */
+            text-shadow: 0 0 10px rgba(232, 121, 249, 0.6);
+        }
+
+        /* --- 导航栏 --- */
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- 步骤角标 --- */
+        .step-badge {
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+            color: white;
+            font-weight: bold;
+            border-radius: 0 0 12px 0;
+        }
+
+        /* --- 按钮样式 --- */
+        .cyber-btn {
+            background: linear-gradient(90deg, #0891b2, #2563eb);
+            border: 1px solid #67e8f9;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .cyber-btn:hover {
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.8);
+            text-shadow: 0 0 5px white;
+        }
+
+        /* --- 代码块 --- */
+        code {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            color: #fcd34d; /* 金黄色文字对比度高 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* --- 成功状态 --- */
+        .success-box {
+            background: rgba(6, 78, 59, 0.5); /* 深绿半透明 */
+            border: 1px solid #34d399;
+            color: #d1fae5;
+        }
+        .success-box code {
+            background: rgba(2, 44, 34, 0.8);
+            color: #34d399;
+            border-color: #34d399;
+        }
+
+        /* 装饰性光点 */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -2;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb w-96 h-96 bg-blue-600 top-0 left-0"></div>
+    <div class="orb w-96 h-96 bg-purple-600 bottom-0 right-0"></div>
+
+    <nav class="sticky top-0 z-50 py-3 px-6 shadow-lg">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="p-2 rounded bg-cyan-900/50 border border-cyan-500/30">
+                    <i class="fa-brands fa-github text-3xl text-cyan-400"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-wider">DEPLOYMENT <span class="text-cyan-400">GUIDE</span></h1>
+                    <p class="text-xs text-cyan-200/70 tracking-widest">SYSTEM: ONLINE // v3.3</p>
+                </div>
+            </div>
+            <a href="https://github.com/" target="_blank" class="cyber-btn flex items-center gap-2">
+                GitHub Login <i class="fa-solid fa-angle-right"></i>
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto p-6 space-y-8 relative z-10">
+
+        <div class="tech-card rounded-xl p-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-bl-full"></div>
+            <h2 class="text-2xl font-bold mb-4 glow-text-cyan">
+                <i class="fa-solid fa-microchip mr-2"></i> INITIALIZATION
+            </h2>
+            <p class="text-slate-300 mb-4">准备将您的 HTML 模块接入互联网矩阵。所需资源：</p>
+            <ul class="space-y-3 text-sm text-slate-300">
+                <li class="flex items-center">
+                    <i class="fa-solid fa-check text-cyan-400 mr-3"></i> 
+                    <span>目标文件：<code>index.html</code> (建议重命名)</span>
+                </li>
+                <li class="flex items-center">
+                    <i class="fa-solid fa-check text-cyan-400 mr-3"></i> 
+                    <span>访问权限：<a href="https://github.com/" class="text-cyan-400 hover:text-cyan-200 underline">GitHub Account</a></span>
+                </li>
+            </ul>
+        </div>
+
+        <section class="tech-card rounded-xl relative overflow-hidden">
+            <div class="step-badge absolute top-0 left-0 px-4 py-1 text-sm">STEP 01</div>
+            <div class="p-8 pt-10">
+                <h3 class="text-xl font-bold mb-4 text-white">
+                    <i class="fa-solid fa-server text-blue-400 mr-2"></i> 建立数据仓库 (Repository)
+                </h3>
+                <div class="space-y-4 text-sm text-slate-300 ml-2 border-l border-blue-500/30 pl-4">
+                    <p>1. 登录控制台，点击右上角 <i class="fa-solid fa-plus text-cyan-400"></i> 选择 <strong>New repository</strong>。</p>
+                    <p>2. Repository name 输入标识符：<code>pharmacy-exam-tool</code>。</p>
+                    <p>3. 权限设置为 <span class="text-green-400 border border-green-500/30 px-1 rounded bg-green-900/30">Public</span> (公开访问)。</p>
+                    <p>4. 勾选 <strong>Add a README file</strong> 以初始化结构。</p>
+                    <p>5. 执行指令：点击底部的 <span class="cyber-btn text-xs py-1 px-2">Create repository</span>。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="tech-card rounded-xl relative overflow-hidden">
+            <div class="step-badge absolute top-0 left-0 px-4 py-1 text-sm bg-gradient-to-r from-purple-600 to-indigo-600">STEP 02</div>
+            <div class="p-8 pt-10">
+                <h3 class="text-xl font-bold mb-4 text-white">
+                    <i class="fa-solid fa-upload text-purple-400 mr-2"></i> 上传核心代码
+                </h3>
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="flex-1 space-y-3 text-sm text-slate-300">
+                        <p>1. 点击 <strong>Add file</strong> <i class="fa-solid fa-caret-down text-xs"></i> -> <strong>Upload files</strong>。</p>
+                        <p>2. 拖入您的 <code>index.html</code> 文件。</p>
+                        <p>3. 等待传输进度条读满。</p>
+                        <p>4. 提交更改：点击绿色的 <span class="text-green-400 font-bold">Commit changes</span>。</p>
+                    </div>
+                    <div class="p-6 rounded-lg border border-dashed border-purple-500/50 bg-purple-900/20 text-center w-full md:w-auto">
+                        <i class="fa-solid fa-file-code text-4xl text-purple-400 mb-2 animate-pulse"></i>
+                        <div class="text-xs text-purple-200">DROP ZONE</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tech-card rounded-xl relative overflow-hidden">
+            <div class="step-badge absolute top-0 left-0 px-4 py-1 text-sm bg-gradient-to-r from-pink-500 to-rose-500">STEP 03</div>
+            <div class="p-8 pt-10">
+                <h3 class="text-xl font-bold mb-4 text-white">
+                    <i class="fa-solid fa-satellite-dish text-pink-400 mr-2"></i> 激活 Pages 服务
+                </h3>
+                <ul class="space-y-4 text-sm text-slate-300">
+                    <li class="flex gap-3">
+                        <span class="bg-slate-700/50 border border-slate-500 w-6 h-6 flex items-center justify-center rounded text-xs font-mono">1</span>
+                        <span>进入 <i class="fa-solid fa-gear text-slate-400"></i> <strong>Settings</strong> 界面。</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="bg-slate-700/50 border border-slate-500 w-6 h-6 flex items-center justify-center rounded text-xs font-mono">2</span>
+                        <span>侧边栏定位至 <i class="fa-solid fa-rocket text-pink-400"></i> <strong>Pages</strong>。</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="bg-slate-700/50 border border-slate-500 w-6 h-6 flex items-center justify-center rounded text-xs font-mono">3</span>
+                        <div class="w-full">
+                            <p class="mb-2">配置 <strong>Build and deployment</strong> 参数：</p>
+                            <div class="bg-slate-900/50 p-3 rounded border border-slate-600 font-mono text-xs">
+                                <div class="flex justify-between mb-1"><span>Source:</span> <span class="text-pink-400">Deploy from a branch</span></div>
+                                <div class="flex justify-between"><span>Branch:</span> <span class="text-pink-400">main / root</span></div>
+                            </div>
+                            <p class="mt-2 text-right"><span class="cyber-btn text-xs py-1">Save</span></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="success-box rounded-xl p-8 text-center shadow-[0_0_30px_rgba(52,211,153,0.2)]">
+            <h3 class="text-2xl font-bold mb-2 text-white" style="font-family: 'Orbitron'">MISSION COMPLETE</h3>
+            <p class="text-sm mb-6 opacity-80">您的网页已成功部署至全球网络节点</p>
+            
+            <div class="inline-block relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-green-400 to-teal-400 rounded blur opacity-25 group-hover:opacity-75 transition"></div>
+                <div class="relative bg-slate-900 border border-green-500/50 px-6 py-4 rounded-lg flex flex-col gap-2">
+                    <span class="text-xs text-slate-500 uppercase">Access Link</span>
+                    <code class="text-lg">https://[User].github.io/[Repo]/</code>
+                </div>
+            </div>
+            
+            <p class="text-xs text-emerald-400/70 mt-4 animate-pulse">
+                <i class="fa-solid fa-circle-info mr-1"></i> 等待系统缓存刷新 (约 60 秒)
+            </p>
+        </section>
+
+    </main>
+
+    
+    <footer class="text-center pb-12 text-slate-400 text-sm">
+        <p>付永莉 武汉市精神卫生中心; 2025年12月10日</p>
+    </footer>
+
+</body>
+</html>
